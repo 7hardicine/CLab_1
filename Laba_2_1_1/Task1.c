@@ -11,7 +11,7 @@
 struct Plain
 {
 	int number;
-	char mark[20];
+	char mark[10];
 	int capacity;
 	double weight;
 	int year;
@@ -53,18 +53,56 @@ void main()
 
 	for (int i = 0; i < size; i++)
 	{
-		printf_s("Самолёт #%d", i + 1);
+		puts("================================================");
+		printf_s("Самолёт #%d\n", i + 1);
 		plains[i].number = input_int("Введите бортовой номер:");
-		scanf_s("%s", &plains[i].mark);
+		printf_s("Введите марку: ");
+		scanf_s("%s", plains[i].mark, (unsigned)_countof(plains[i].mark));
 		plains[i].capacity = input_int("Введите вместимость:");
 		plains[i].weight = input_double("Введите грузоподъёмность:");
 		plains[i].year = input_int("Введите год выпуска:");
 	}
 
+	puts("================================================================================================");
+	puts("|| # || Бортовой номер || Вместимость || Грузоподъемность || Год выпуска ||       Марка       ||");
+	puts("================================================================================================");
+
 	for (int i = 0; i < size; i++)
 	{
-		printf_s("Самолёт #%d", i + 1);
-		printf_s("\nбортовой номер: %d\nвместимость: %d\nгрузоподъёмность: %lf\nгод выпуска: %d\nмарка: %s", plains[i].number, plains[i].capacity, plains[i].weight, plains[i].year, plains[i].mark);
+		printf_s("||%2d || %9d      || %7d     || %10.2lf       || %8d    || %10s           || \n", i + 1, plains[i].number, plains[i].capacity, plains[i].weight, plains[i].year, plains[i].mark);
+	}
+
+	puts("================================================================================================");
+
+	double temp;
+
+	for (int i = 1; i < size; i++)
+	{
+		temp = plains[0].weight;
+		if (plains[i].weight > temp)
+		{
+			temp = plains[i].weight;
+		}
+	}
+
+	int max_weight[MAX_SIZE];
+	int max_weight_size = 0;
+
+	for (int i = 0, j = 0; i < size; i++)
+	{
+		if (plains[i].weight == temp)
+		{
+			max_weight[j] = i;
+			j++;
+			max_weight_size++;
+		}
+	}
+
+	printf_s("Самолёты с максимальной грузоподъёмностью: ");
+
+	for (int i = 0; i < max_weight_size; i++)
+	{
+		printf_s("#%d, ", max_weight[i] + 1);
 	}
 
 	system("pause");
