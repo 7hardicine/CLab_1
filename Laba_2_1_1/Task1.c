@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <locale.h>
 #include <Windows.h>
@@ -57,7 +58,7 @@ void main()
 		printf_s("Самолёт #%d\n", i + 1);
 		plains[i].number = input_int("Введите бортовой номер:");
 		printf_s("Введите марку: ");
-		scanf_s("%s", plains[i].mark, (unsigned)_countof(plains[i].mark));
+		scanf("%s", &plains[i].mark);
 		plains[i].capacity = input_int("Введите вместимость:");
 		plains[i].weight = input_double("Введите грузоподъёмность:");
 		plains[i].year = input_int("Введите год выпуска:");
@@ -69,7 +70,8 @@ void main()
 
 	for (int i = 0; i < size; i++)
 	{
-		printf_s("||%2d || %9d      || %7d     || %10.2lf       || %8d    || %10s           || \n", i + 1, plains[i].number, plains[i].capacity, plains[i].weight, plains[i].year, plains[i].mark);
+		printf_s("||%2d || %9d      || %7d     || %10.2lf       || %8d    || %10s        || \n", \
+			i + 1, plains[i].number, plains[i].capacity, plains[i].weight, plains[i].year, plains[i].mark);
 	}
 
 	puts("================================================================================================");
@@ -98,12 +100,22 @@ void main()
 		}
 	}
 
-	printf_s("Самолёты с максимальной грузоподъёмностью: ");
+	printf_s("Самолёт с максимальной грузоподъёмностью: ");
 
 	for (int i = 0; i < max_weight_size; i++)
 	{
 		printf_s("#%d, ", max_weight[i] + 1);
 	}
+	puts("");
+
+	int flag = 0;
+	double weight_input = input_double("Введите грузоподъёмность, по которой хотите провести сравнение: ");
+	for (int i = 0; i < size; i++)
+	{
+		plains[i].weight < weight_input ? flag++ : flag;
+	}
+
+	printf_s("Количество самолётов, у которых грузоподъёмность меньше %.2lf равно %d\n", weight_input, flag);
 
 	system("pause");
 }
