@@ -82,7 +82,21 @@ void main()
 		puts("========================================================================================");
 	}
 
+	char* buff = (char*)malloc(MAX_SIZE * sizeof(char));
+	int buff_size = 1;
+	for (int i = 0; i < count; i++)
+	{
+		int k = 0;
+		for (int j = 0; j < buff_size; j++)
+		{
+			printf_s("%d %d\n", i, j);
+			strcmp((goods + i)->type, *(buff + j)) == 0 ? k++ : k;
+			printf_s("%d\n", k);
+		}
+		k == 1 ? *(buff + buff_size) = (goods + i)->type, buff_size++ : k;
+	}
 
+	printf_s("%d\n", buff_size);
 
 	system("pause");
 }
