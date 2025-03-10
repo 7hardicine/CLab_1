@@ -1,18 +1,28 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 #include <Windows.h>
 #define MAX_SIZE 20
+
+/*
+- определить среднюю стоимость товара каждого вида на складе;
+- вывести информацию о товарах, поступивших в указанный день, цена на которые меньше
+*/
 
 struct Good
 {
 	char type[MAX_SIZE];
 	int amount;
 	double unit_price;
-	int date;
+	struct Date date;
+};
+
+struct Date
+{
+	int day;
+	int month;
+	int year;
 };
 
 int input_int(char query[])
@@ -39,6 +49,21 @@ double input_double(char query[])
 	return number;
 }
 
+void Output(char mess[], struct Good* goods, int goods_count)
+{
+	printf_s("%s\n", mess);
+	puts("========================================================================================");
+	puts("|| # || Вид товара || Количество товара || Дата поступления на склад || Цена за штуку ||");
+	puts("========================================================================================");
+
+	for (int i = 0; i < goods_count; i++)
+	{
+		printf_s("||%2d ||%6s      ||%9d          ||%14d             ||%8.2lf       ||\n", \
+			i + 1, (goods + i)->type, (goods + i)->amount, (goods + i)->date, (goods + i)->unit_price);
+		puts("========================================================================================");
+	}
+}
+
 char* gets(char*);
 
 void main()
@@ -48,20 +73,20 @@ void main()
 	SetConsoleOutputCP(1251);
 
 	struct Good* goods = (struct Good*)calloc(MAX_SIZE, sizeof(struct Good));
-	int count = 0;
 	int Is_Not_Enter = 1;
+	int goods_count = 0;
 
 	do
 	{
-		printf_s("Товар №%d, введите его вид (enter для прекращения ввода): ", count + 1);
-		if (strcmp(gets((goods + count)->type), "") != 0)
+		printf_s("Товар №%d, введите его вид (enter для прекращения ввода):", goods_count + 1);
+		if (strcmp(gets((goods + goods_count)->type), "") != 0)
 		{
-			(goods + count)->amount = input_int("Введите количество товаров на складе: ");
-			(goods + count)->date = input_int("Введите дату поступления товара на склад: ");
-			(goods + count)->unit_price = input_double("Введите цену за товара за шуку: ");
+			(goods + goods_count)->amount = input_int("Введите количество товаров на складе:");
+			(goods + goods_count)->date = input_int("Введите дату поступления товара на склад:");
+			(goods + goods_count)->unit_price = input_double("Введите цену за товара за шуку:");
 			puts("");
 			while (getchar() != '\n');
-			count++;
+			goods_count++;
 		}
 		else
 		{
@@ -69,34 +94,9 @@ void main()
 		}
 	} while (Is_Not_Enter);
 
-	goods = (struct Good*)realloc(goods, count * sizeof(struct Good));
+	Output("Исходный массив:", goods, goods_count);
 
-	puts("========================================================================================");
-	puts("|| # || Вид товара || Количество товара || Дата поступления на склад || Цена за штуку ||");
-	puts("========================================================================================");
-
-	for (int i = 0; i < count; i++)
-	{
-		printf_s("||%2d ||%6s      ||%9d          ||%14d             ||%8.2lf       ||\n", \
-			i + 1, (goods + i)->type, (goods + i)->amount, (goods + i)->date, (goods + i)->unit_price);
-		puts("========================================================================================");
-	}
-
-	char* buff = (char*)malloc(MAX_SIZE * sizeof(char));
-	int buff_size = 1;
-	for (int i = 0; i < count; i++)
-	{
-		int k = 0;
-		for (int j = 0; j < buff_size; j++)
-		{
-			printf_s("%d %d\n", i, j);
-			strcmp((goods + i)->type, *(buff + j)) == 0 ? k++ : k;
-			printf_s("%d\n", k);
-		}
-		k == 1 ? *(buff + buff_size) = (goods + i)->type, buff_size++ : k;
-	}
-
-	printf_s("%d\n", buff_size);
+	goods = (struct Good*)realloc(goods, goods_count * sizeof(struct Good));
 
 	system("pause");
 }

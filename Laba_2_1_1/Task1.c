@@ -57,8 +57,9 @@ void Input(struct Plane planes[], int plane_count)
 	}
 }
 
-void Output(struct Plane planes[], int plane_count)
+void Output(char mess[], struct Plane planes[], int plane_count)
 {
+	printf_s("%s\n", mess);
 	puts("================================================================================================");
 	puts("|| # || Бортовой номер || Вместимость || Грузоподъемность || Год выпуска ||       Марка       ||");
 	puts("================================================================================================");
@@ -96,6 +97,26 @@ int Max_Weight_Arr(struct Plane planes[], int plane_count, double max_weight_val
 	return j;
 }
 
+// Сортировка выбором
+void Sort(struct Plane planes_max_weight[], int plane_max_weight_count)
+{
+	struct Plane temp;
+	for (int i = 0; i < plane_max_weight_count; i++)
+	{
+		int min = i;
+		for (int j = i + 1; j < plane_max_weight_count; j++)
+		{
+			if (planes_max_weight[j].year < planes_max_weight[min].year)
+			{
+				min = j;
+			}
+		}
+		temp = planes_max_weight[i];
+		planes_max_weight[i] = planes_max_weight[min];
+		planes_max_weight[min] = temp;
+	}
+}
+
 void main()
 {
 	setlocale(LC_ALL, "rus");
@@ -105,15 +126,25 @@ void main()
 	struct Plane planes[MAX_SIZE];
 
 	int plane_count = input_int("Введите количество самолётов:");
-	Input(planes, plane_count); // Вводим самолёты
-	Output(planes, plane_count); // Выводим таблицу
+	Input(planes, plane_count); 
+	// Вводим самолёты
+	Output("Изначальный массив структур:", planes, plane_count); 
+	// Выводим таблицу
 
-	double max_weight_value = Max_Weight_Find(planes, plane_count); // Находим максимальную грузоподъёмность
-	struct Plane planes_max_weight[MAX_SIZE]; // Описываем новую структуру
+	double max_weight_value = Max_Weight_Find(planes, plane_count); 
+	// Находим максимальную грузоподъёмность
+	struct Plane planes_max_weight[MAX_SIZE]; 
+	// Описываем новую структуру
 
 	int plane_max_weight_count = Max_Weight_Arr(planes, plane_count, max_weight_value, planes_max_weight); 
 	// Находим количество самолётов с максимальной грузоподъёмностью и заполняем структуру
-	Output(planes_max_weight, plane_max_weight_count); // Выводим таблицу
+	Output("Массив с самолётами, у которых максимальная грузоподъёмность:", planes_max_weight, plane_max_weight_count); 
+	// Выводим таблицу
+
+	Sort(planes_max_weight, plane_max_weight_count);
+	// Сортируем массив
+	Output("Отсортированный массив с самолётами, у которых максимальная грузоподъёмность:", planes_max_weight, plane_max_weight_count);
+	// Выводим таблицу
 
 	int flag = 0;
 	double weight_input = input_double("Введите грузоподъёмность, по которой хотите провести сравнение: ");
