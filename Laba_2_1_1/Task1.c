@@ -82,6 +82,20 @@ double Max_Weight_Find(struct Plane planes[], int plane_count)
 	return temp;
 }
 
+int Max_Weight_Arr(struct Plane planes[], int plane_count, double max_weight_value, struct Plane planes_max_weight[])
+{
+	int j = 0;
+	for (int i = 0; i < plane_count; i++)
+	{
+		if (planes[i].weight == max_weight_value)
+		{
+			planes_max_weight[j] = planes[i];
+			j++;
+		}
+	}
+	return j;
+}
+
 void main()
 {
 	setlocale(LC_ALL, "rus");
@@ -91,28 +105,15 @@ void main()
 	struct Plane planes[MAX_SIZE];
 
 	int plane_count = input_int("Введите количество самолётов:");
-	Input(planes, plane_count);
-	Output(planes, plane_count);
+	Input(planes, plane_count); // Вводим самолёты
+	Output(planes, plane_count); // Выводим таблицу
 
-	double max_weight_value = Max_Weight_Find(planes, plane_count);
-	struct Plane planes_max_weight[MAX_SIZE];
-	for (int i = 0, j = 0; i < plane_count; i++)
-	{
-		if (planes[i].weight == max_weight_value)
-		{
-			max_weight[j] = i;
-			j++;
-			max_weight_size++;
-		}
-	}
+	double max_weight_value = Max_Weight_Find(planes, plane_count); // Находим максимальную грузоподъёмность
+	struct Plane planes_max_weight[MAX_SIZE]; // Описываем новую структуру
 
-	printf_s("Самолёт с максимальной грузоподъёмностью: ");
-
-	for (int i = 0; i < max_weight_size; i++)
-	{
-		printf_s("#%d; ", max_weight[i] + 1);
-	}
-	puts("");
+	int plane_max_weight_count = Max_Weight_Arr(planes, plane_count, max_weight_value, planes_max_weight); 
+	// Находим количество самолётов с максимальной грузоподъёмностью и заполняем структуру
+	Output(planes_max_weight, plane_max_weight_count); // Выводим таблицу
 
 	int flag = 0;
 	double weight_input = input_double("Введите грузоподъёмность, по которой хотите провести сравнение: ");
