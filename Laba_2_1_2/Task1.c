@@ -10,19 +10,19 @@
 - вывести информацию о товарах, поступивших в указанный день, цена на которые меньше
 */
 
+struct Date
+{
+	int day;
+	int month;
+	int year;
+};
+
 struct Good
 {
 	char type[MAX_SIZE];
 	int amount;
 	double unit_price;
 	struct Date date;
-};
-
-struct Date
-{
-	int day;
-	int month;
-	int year;
 };
 
 int input_int(char query[])
@@ -58,10 +58,20 @@ void Output(char mess[], struct Good* goods, int goods_count)
 
 	for (int i = 0; i < goods_count; i++)
 	{
-		printf_s("||%2d ||%6s      ||%9d          ||%14d             ||%8.2lf       ||\n", \
-			i + 1, (goods + i)->type, (goods + i)->amount, (goods + i)->date, (goods + i)->unit_price);
+		printf_s("||%2d ||%8s    ||%9d          ||%4d%4d%6d             ||%8.2lf       ||\n", \
+			i + 1, (goods + i)->type, (goods + i)->amount, (goods + i)->date.day, (goods + i)->date.month, (goods + i)->date.year, (goods + i)->unit_price);
 		puts("========================================================================================");
 	}
+}
+
+void Input(struct Good* goods, int goods_count)
+{
+	(goods + goods_count)->amount = input_int("¬ведите количество товаров на складе:");
+	(goods + goods_count)->date.day = input_int("¬ведите день поступлени€ товара на склад:");
+	(goods + goods_count)->date.month = input_int("¬ведите мес€ц поступлени€ товара на склад:");
+	(goods + goods_count)->date.year = input_int("¬ведите год поступлени€ товара на склад:");
+	(goods + goods_count)->unit_price = input_double("¬ведите цену за товара за шуку:");
+	puts("");
 }
 
 char* gets(char*);
@@ -81,10 +91,7 @@ void main()
 		printf_s("“овар є%d, введите его вид (enter дл€ прекращени€ ввода):", goods_count + 1);
 		if (strcmp(gets((goods + goods_count)->type), "") != 0)
 		{
-			(goods + goods_count)->amount = input_int("¬ведите количество товаров на складе:");
-			(goods + goods_count)->date = input_int("¬ведите дату поступлени€ товара на склад:");
-			(goods + goods_count)->unit_price = input_double("¬ведите цену за товара за шуку:");
-			puts("");
+			Input(goods, goods_count);
 			while (getchar() != '\n');
 			goods_count++;
 		}
