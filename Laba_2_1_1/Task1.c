@@ -50,7 +50,7 @@ void Input(struct Plane planes[], int plane_count)
 		printf_s("—амолЄт #%d\n", i + 1);
 		planes[i].number = input_int("¬ведите бортовой номер:");
 		printf_s("¬ведите марку: ");
-		scanf("%s", &planes[i].mark);
+		scanf("%10s", &planes[i].mark);
 		planes[i].capacity = input_int("¬ведите вместимость:");
 		planes[i].weight = input_double("¬ведите грузоподъЄмность:");
 		planes[i].year = input_int("¬ведите год выпуска:");
